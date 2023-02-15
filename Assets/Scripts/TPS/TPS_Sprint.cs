@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -8,13 +9,21 @@ public class TPS_Sprint : MonoBehaviour
     [SerializeField] private float walkSpeed, sprintSpeed;
     [SerializeField] private Transform cameraMan;
     
-    private float _playerSpeed;
     [SerializeField] private bool sprinting;
-
-
     
-    
+        
+    private float _playerSpeed;
     private Vector3 _moveDirection;
+
+    private void OnEnable()
+    {
+        SprintChecker.SetSprintStatus += SetSprintStatus;
+    }
+
+    private void OnDisable()
+    {
+        SprintChecker.SetSprintStatus -= SetSprintStatus;
+    }
 
     void FixedUpdate()
     {
@@ -47,7 +56,7 @@ public class TPS_Sprint : MonoBehaviour
         }
         else
         {
-            if (_playerSpeed < walkSpeed)
+            if (_playerSpeed != walkSpeed)
                 _playerSpeed = Mathf.MoveTowards(_playerSpeed, walkSpeed, walkSpeed * Time.fixedDeltaTime);
 
             controller.Move(_playerSpeed * _moveDirection * Time.fixedDeltaTime);
@@ -63,5 +72,10 @@ public class TPS_Sprint : MonoBehaviour
 
         //Calculates the direction
         _moveDirection = (cameraForward * joystick.Vertical + cameraRight * joystick.Horizontal);
+    }
+
+    void SetSprintStatus(bool canSprint)
+    {
+        sprinting = canSprint;
     }
 }
