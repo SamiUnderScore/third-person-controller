@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class TPS_Sprint : MonoBehaviour
+public class TPS_Sprint_Gravity : MonoBehaviour
 {
     [SerializeField] private VariableJoystick joystick;
     [SerializeField] private CharacterController controller;
@@ -10,7 +10,11 @@ public class TPS_Sprint : MonoBehaviour
     [SerializeField] private Transform cameraMan;
     
     [SerializeField] private bool sprinting;
-    
+    [SerializeField] private Transform groundChecker;
+    [SerializeField] private float gravity = 9.81f; // The strength of the fake gravity force
+    [SerializeField] private float groundCheckDistance = 0.1f; // The distance to check for ground using a SphereCast
+    [SerializeField] private LayerMask groundMask; // The layer mask for ground objects
+    private Vector3 _velocity;
         
     private float _playerSpeed;
     private Vector3 _moveDirection;
@@ -31,8 +35,29 @@ public class TPS_Sprint : MonoBehaviour
         {
             ProcessJoystickInput();
         }
+        
+        print($"grounded: {CheckGround()}");
+        if (!CheckGround())
+        {
+            controller.Move(_velocity * Time.fixedDeltaTime);
+        }
+        
     }
     
+    
+    bool CheckGround()
+    {
+        bool isGrounded = Physics.CheckSphere(groundChecker.position, groundCheckDistance, groundMask);
+        if (isGrounded && _velocity.y < 0)
+        {
+            _velocity.y = -2f;
+        }
+    
+        _velocity.y += -gravity * Time.fixedDeltaTime;
+        return isGrounded;
+    }
+
+
     private void ProcessJoystickInput()
     {
         //Calculates the direction
