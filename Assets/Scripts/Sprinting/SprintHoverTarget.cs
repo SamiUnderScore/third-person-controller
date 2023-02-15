@@ -45,13 +45,13 @@ public class SprintHoverTarget : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void StartSprinting()
     {
-        gameObject.GetComponent<Image>().color = activeColor;
+        ActivateSprintTarget(true);
         TargetEntered?.Invoke();
     }
 
     public void StopSprinting()
     {
-        gameObject.GetComponent<Image>().color = nonActiveColor;
+        ActivateSprintTarget(false);
         TargetExited?.Invoke();
     }
 
@@ -64,4 +64,20 @@ public class SprintHoverTarget : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         
     }
+
+    public void ActivateSprintTarget(bool status)
+    {
+        switch (status)
+        {
+            case false:
+                gameObject.GetComponent<Image>().color = nonActiveColor;
+                break;
+            case true:
+                gameObject.GetComponent<Image>().color = activeColor;
+                break;
+        }
+        
+    }
+
+    
 }

@@ -41,6 +41,18 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     private Vector2 input = Vector2.zero;
 
+    private void OnEnable()
+    {
+        SprintChecker.ToggleSprintButtonClicked += ToggleSprintCalledByButton;
+    }
+
+    private void OnDisable()
+    {
+        SprintChecker.ToggleSprintButtonClicked -= ToggleSprintCalledByButton;
+    }
+
+    
+
     protected virtual void Start()
     {
         HandleRange = handleRange;
@@ -135,12 +147,32 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     public virtual void OnPointerUp(PointerEventData eventData)
     {
         isPressing = false;
+        ResetJoystick();
+        OnPointerUpCallback?.Invoke();
+    }
+
+    public void ResetJoystick()
+    {
         if (!SprintChecker.GetSprintStatus())
         {
             input = Vector2.zero;
-            handle.anchoredPosition = Vector2.zero;
+            handle.anchoredPosition = Vector2.zero;    
         }
-        OnPointerUpCallback?.Invoke();
+    }
+
+    public void ToggleSprintCalledByButton(bool status)
+    {
+        switch (status)
+        {
+            case false:
+                input = Vector2.zero;
+                handle.anchoredPosition = Vector2.zero;
+                break;
+            case true:
+                input = new Vector2(0, 1);
+                handle.anchoredPosition = new Vector2(0, 128);
+                break;
+        }
     }
 
     protected Vector2 ScreenPointToAnchoredPosition(Vector2 screenPosition)

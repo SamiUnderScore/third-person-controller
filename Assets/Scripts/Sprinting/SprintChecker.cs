@@ -8,7 +8,7 @@ public class SprintChecker : MonoBehaviour
     [SerializeField] private SprintHoverTarget sprintHoverTarget;
     [SerializeField] private Button sprintButton;
 
-    public static event Action<bool> SetSprintStatus;
+    public static event Action<bool> SetSprintStatus, ToggleSprintButtonClicked;
     public static bool sprintStatus;
     private void OnEnable()
     {
@@ -16,6 +16,8 @@ public class SprintChecker : MonoBehaviour
         VariableJoystick.OnPointerUpCallback += JoystickLeftCallback;
         SprintHoverTarget.TargetEntered += SprintTargetEntered;
         SprintHoverTarget.TargetExited += SprintTargetExited;
+        
+        sprintButton.onClick.AddListener(ToggleSprint);
     }
 
     private void OnDisable()
@@ -24,6 +26,8 @@ public class SprintChecker : MonoBehaviour
         VariableJoystick.OnPointerUpCallback -= JoystickLeftCallback;
         SprintHoverTarget.TargetEntered -= SprintTargetEntered;
         SprintHoverTarget.TargetExited -= SprintTargetExited;
+        
+        sprintButton.onClick.RemoveListener(ToggleSprint);
     }
 
     void SprintTargetExited()
@@ -54,6 +58,14 @@ public class SprintChecker : MonoBehaviour
     public static bool GetSprintStatus()
     {
         return sprintStatus;
+    }
+
+    public void ToggleSprint()
+    {
+        sprintStatus = !sprintStatus;
+        sprintHoverTarget.ActivateSprintTarget(sprintStatus);
+        SetSprintStatus?.Invoke(sprintStatus);
+        ToggleSprintButtonClicked?.Invoke(sprintStatus);
     }
 
 }
