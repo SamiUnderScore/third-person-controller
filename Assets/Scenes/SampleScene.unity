@@ -1265,7 +1265,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1316725278}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1641d5d0c0ad44b3fbe1cc14064981e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2dd455d69fe764c91a9e1ac7a2806a83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   joystick: {fileID: 31663717}
@@ -1274,6 +1274,12 @@ MonoBehaviour:
   sprintSpeed: 10
   cameraMan: {fileID: 963194228}
   sprinting: 0
+  groundChecker: {fileID: 703761365}
+  gravity: 9.81
+  groundCheckDistance: 0.6
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &1685918786
 GameObject:
   m_ObjectHideFlags: 0
