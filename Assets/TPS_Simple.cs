@@ -1,16 +1,16 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
-public class ThirdPersonController : MonoBehaviour
+public class TPS_Simple : MonoBehaviour
 {
     [SerializeField] private VariableJoystick joystick;
     [SerializeField] private CharacterController controller;
-    [SerializeField] private float moveSpeed, rotateSpeed;
+    [SerializeField] private float moveSpeed;
     [SerializeField] private Transform cameraMan;
-
+    
     private Vector3 _moveDirection;
 
-    void Update()
+    void FixedUpdate()
     {
         if(joystick.Direction.magnitude > 0.1f)
         {
@@ -27,13 +27,12 @@ public class ThirdPersonController : MonoBehaviour
         MovePlayer();
 
         //Rotates the player according to the input rotation
-        //transform.eulerAngles = new Vector3(transform.eulerAngles.x, Mathf.Atan2(joystick.Direction.normalized.x, joystick.Direction.normalized.y) * Mathf.Rad2Deg, transform.eulerAngles.z);
         transform.rotation = Quaternion.LookRotation(_moveDirection, Vector3.up);
     }
 
     void MovePlayer()
     {
-        controller.Move(moveSpeed * _moveDirection * Time.deltaTime);
+        controller.Move(moveSpeed * _moveDirection * Time.fixedDeltaTime);
     }
 
     void CalculateDireciton()
